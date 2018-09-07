@@ -1,5 +1,6 @@
 package com.example.zarkovic.testdesignpizzapro;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
     SignInButton sign_id_button;
 
     FirebaseAuth FireBaseAuthorization;
+    FirebaseUser firebaseUser;
+
+    //firebase reference
+    DatabaseReference rootReference;
+
+    ProgressDialog dialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FireBaseAuthorization = FirebaseAuth.getInstance();
 
+        dialog = new ProgressDialog(this);
 
         txt_useraname = (EditText) findViewById(R.id.txt_username);
         txt_password = (EditText) findViewById(R.id.txt_password);
@@ -70,24 +80,50 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btn_login.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
+                dialog.setMessage("Logging in, please wait");
+                dialog.show();
                 if(txt_useraname.getText().toString().trim().equals("")&&
                         txt_password.getText().toString().trim().equals("")){
                     Toast.makeText(getApplicationContext(), "Type in some data", Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
                 }else{
-                    String username = txt_useraname.getText().toString().trim();
-                    String password = txt_password.getText().toString().trim();
-                    FireBaseAuthorization.signInWithEmailAndPassword(username, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    final String username = txt_useraname.getText().toString().trim();
+                    final String password = txt_password.getText().toString().trim();
+                    FireBaseAuthorization.signInWithEmailAndPassword(username, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_LONG).show();
+                                //inserting data to firebase database
+                                firebaseUser = FireBaseAuthorization.getCurrentUser();
 
+                                User myUserInserObj = new User(username, password);
+                                rootReference.child(firebaseUser.getUid()).setValue(myUserInserObj)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    dialog.dismiss();
+                                                    Toast.makeText(getApplicationContext(), "Values stored to database", Toast.LENGTH_LONG).show();
+                                                    Intent i = new Intent(MainActivity.this, UserProfileActivity.class);
+                                                    startActivity(i);
+                                                }else{
+
+                                                    Toast.makeText(getApplicationContext(), "Values are not stored", Toast.LENGTH_LONG).show();
+                                                    dialog.dismiss();
+                                                }
+                                            }
+                                        });
                                 Intent i = new Intent(MainActivity.this, UserProfileActivity.class);
                                 startActivity(i);
+                                dialog.dismiss();
                             }else{
                                 Toast.makeText(MainActivity.this, "Wrong data entered", Toast.LENGTH_LONG).show();
+                                dialog.dismiss();
                             }
                         }
 
@@ -113,10 +149,10 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
 
                             FirebaseUser user = FireBaseAuthorization.getCurrentUser();
-
+                            finish();
                             Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
                             startActivity(i);
-                            finish();
+
 
                         } else {
                             // If sign in fails, display a message to the user.

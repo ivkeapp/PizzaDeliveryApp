@@ -46,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         FireBaseAuthorization = FirebaseAuth.getInstance();
 
-        //pointing to te root reference of an firebase database example: pizzaapp-ef707: null
+        //pointing to the root reference of an firebase database example: pizzaapp-ef707: null
         rootReference = FirebaseDatabase.getInstance().getReference();
 
         btn_register.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void createUser(){
-        dialog.setMessage("Registering. Please wait Nenad");
+        dialog.setMessage("Registering, please wait");
         dialog.show();
         if(txt_useraname.getText().toString().trim().equals("")&&
                 txt_password.getText().toString().trim().equals("")){
