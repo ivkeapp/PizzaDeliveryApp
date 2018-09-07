@@ -98,26 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_LONG).show();
-                                //inserting data to firebase database
-                                firebaseUser = FireBaseAuthorization.getCurrentUser();
 
-                                User myUserInserObj = new User(username, password);
-                                rootReference.child(firebaseUser.getUid()).setValue(myUserInserObj)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful()){
-                                                    dialog.dismiss();
-                                                    Toast.makeText(getApplicationContext(), "Values stored to database", Toast.LENGTH_LONG).show();
-                                                    Intent i = new Intent(MainActivity.this, UserProfileActivity.class);
-                                                    startActivity(i);
-                                                }else{
-
-                                                    Toast.makeText(getApplicationContext(), "Values are not stored", Toast.LENGTH_LONG).show();
-                                                    dialog.dismiss();
-                                                }
-                                            }
-                                        });
                                 Intent i = new Intent(MainActivity.this, UserProfileActivity.class);
                                 startActivity(i);
                                 dialog.dismiss();
@@ -139,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-
+        dialog.setMessage("Logging in, please wait");
+        dialog.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         FireBaseAuthorization.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -149,17 +131,16 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
 
                             FirebaseUser user = FireBaseAuthorization.getCurrentUser();
-                            finish();
+
+                            dialog.dismiss();
                             Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
                             startActivity(i);
 
 
                         } else {
-                            // If sign in fails, display a message to the user.
-
+                            Toast.makeText(getApplicationContext(), "Signing in failed", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
                         }
-
-                        // ...
                     }
                 });
     }
