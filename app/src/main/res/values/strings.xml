@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">TestDesignPizzaPro</string>
+    <string name="app_name">PizzaPro</string>
+    <string name="register">Register</string>
 </resources>

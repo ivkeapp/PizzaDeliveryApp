@@ -1,13 +1,13 @@
 package com.example.zarkovic.testdesignpizzapro;
 
-public class Cheese {
+public class Mushrooms {
 
     String name;
 
-    public Cheese() {
+    public Mushrooms() {
     }
 
-    public Cheese(String name) {
+    public Mushrooms(String name) {
         this.name = name;
     }
 

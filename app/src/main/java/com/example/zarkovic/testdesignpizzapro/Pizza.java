@@ -1,20 +1,16 @@
 package com.example.zarkovic.testdesignpizzapro;
 
+
+import java.util.List;
+
 public class Pizza {
+    String id;
+    Ingredience ingredients;
+    String name;
+    Prices prices;
+    List<Spices> spices;
 
-    String id, name, size, cheese, dough, meet, vegetables, topping, price;
-
-    public Pizza(String id, String name, String size, String cheese, String dough,
-                 String meet, String vegetables, String topping, String price) {
-        this.id = id;
-        this.name = name;
-        this.size = size;
-        this.cheese = cheese;
-        this.dough = dough;
-        this.meet = meet;
-        this.vegetables = vegetables;
-        this.topping = topping;
-        this.price = price;
+    public Pizza() {
     }
 
     public String getId() {
@@ -25,6 +21,14 @@ public class Pizza {
         this.id = id;
     }
 
+    public Ingredience getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(Ingredience ingredients) {
+        this.ingredients = ingredients;
+    }
+
     public String getName() {
         return name;
     }
@@ -33,59 +37,19 @@ public class Pizza {
         this.name = name;
     }
 
-    public String getSize() {
-        return size;
+    public Prices getPrices() {
+        return prices;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setPrices(Prices prices) {
+        this.prices = prices;
     }
 
-    public String getCheese() {
-        return cheese;
+    public List<Spices> getSpices() {
+        return spices;
     }
 
-    public void setCheese(String cheese) {
-        this.cheese = cheese;
-    }
-
-    public String getDough() {
-        return dough;
-    }
-
-    public void setDough(String dough) {
-        this.dough = dough;
-    }
-
-    public String getMeet() {
-        return meet;
-    }
-
-    public void setMeet(String meet) {
-        this.meet = meet;
-    }
-
-    public String getVegetables() {
-        return vegetables;
-    }
-
-    public void setVegetables(String vegetables) {
-        this.vegetables = vegetables;
-    }
-
-    public String getTopping() {
-        return topping;
-    }
-
-    public void setTopping(String topping) {
-        this.topping = topping;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
+    public void setSpices(List<Spices> spices) {
+        this.spices = spices;
     }
 }
